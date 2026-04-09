@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ibrahim Soumaré — Portfolio BTS SIO SISR</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ══════════ TERMINAL EFFECT ══════════ */
+    .terminal{background:#0c1017;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;font-family:var(--font-m);font-size:.85rem;max-width:620px;margin:0 auto 2.5rem;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+    .terminal-bar{background:#161d2a;padding:.55rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid var(--border)}
+    .terminal-dot{width:11px;height:11px;border-radius:50%}
+    .terminal-dot.r{background:#ff5f57}.terminal-dot.y{background:#ffbd2e}.terminal-dot.g{background:#28c840}
+    .terminal-bar span{color:var(--text2);font-size:.75rem;margin-left:.5rem;font-family:var(--font-m)}
+    .terminal-body{padding:1.2rem 1.4rem;line-height:2;min-height:180px}
+    .terminal-line{opacity:0;animation:termFadeIn .4s forwards}
+    .terminal-line .prompt{color:var(--accent)}
+    .terminal-line .cmd{color:#e4e9f2}
+    .terminal-line .flag{color:var(--blue)}
+    .terminal-line .string{color:var(--gold)}
+    .terminal-line .comment{color:#555e70;font-style:italic}
+    .terminal-line .output{color:var(--text2)}
+    @keyframes termFadeIn{to{opacity:1}}
+    .cursor-blink{display:inline-block;width:8px;height:16px;background:var(--accent);margin-left:2px;animation:blink 1s step-end infinite;vertical-align:middle}
+    @keyframes blink{50%{opacity:0}}
+
+    /* ══════════ GLITCH EFFECT ══════════ */
+    .glitch{position:relative;display:inline-block}
+    .glitch::before,.glitch::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden}
+    .glitch::before{left:2px;text-shadow:-2px 0 #ff00de;clip-path:inset(0 0 65% 0);animation:glitch-top 2.5s infinite linear alternate-reverse}
+    .glitch::after{left:-2px;text-shadow:2px 0 #00e676;clip-path:inset(60% 0 0 0);animation:glitch-bot 3s infinite linear alternate-reverse}
+    @keyframes glitch-top{0%{clip-path:inset(0 0 85% 0)}25%{clip-path:inset(0 0 65% 0)}50%{clip-path:inset(10% 0 70% 0)}75%{clip-path:inset(0 0 80% 0)}100%{clip-path:inset(5% 0 75% 0)}}
+    @keyframes glitch-bot{0%{clip-path:inset(80% 0 0 0)}25%{clip-path:inset(70% 0 0 0)}50%{clip-path:inset(85% 0 0 0)}75%{clip-path:inset(65% 0 0 0)}100%{clip-path:inset(75% 0 0 0)}}
+
+    /* ══════════ PARTICLES CANVAS ══════════ */
+    #particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+    /* ══════════ SKILL BARS ══════════ */
+    .skills-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem}
+    @media(max-width:600px){.skills-grid{grid-template-columns:1fr}}
+    .skill-item{display:flex;align-items:center;gap:.8rem}
+    .skill-name{font-size:.82rem;font-weight:600;width:110px;flex-shrink:0;color:var(--text2)}
+    .skill-bar{flex:1;height:6px;background:var(--bg2);border-radius:3px;overflow:hidden;position:relative}
+    .skill-fill{height:100%;border-radius:3px;width:0;transition:width 1.5s cubic-bezier(.22,1,.36,1)}
+    .skill-fill.green{background:linear-gradient(90deg,var(--accent),var(--accent2))}
+    .skill-fill.blue{background:linear-gradient(90deg,#448aff,#2962ff)}
+    .skill-fill.purple{background:linear-gradient(90deg,#b388ff,#7c4dff)}
+    .skill-fill.gold{background:linear-gradient(90deg,#ffd740,#ffc400)}
+    .skill-fill.red{background:linear-gradient(90deg,#ff5252,#d50000)}
+    .skill-pct{font-size:.72rem;font-family:var(--font-m);color:var(--text2);width:35px;text-align:right}
+
+    /* ══════════ FLOATING ICONS ══════════ */
+    .float-icons{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+    .float-icon{position:absolute;font-size:1.5rem;opacity:.06;animation:floatUp linear infinite}
+    @keyframes floatUp{0%{transform:translateY(100vh) rotate(0deg);opacity:0}10%{opacity:.06}90%{opacity:.06}100%{transform:translateY(-100px) rotate(360deg);opacity:0}}
+
+    /* ══════════ SCAN LINE ══════════ */
+    .scan-line{position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.08;z-index:99;pointer-events:none;animation:scanDown 8s linear infinite}
+    @keyframes scanDown{0%{top:0}100%{top:100vh}}
+
+    /* ══════════ COUNTERS ══════════ */
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:2rem}
+    @media(max-width:600px){.stats-row{grid-template-columns:repeat(2,1fr)}}
+    .stat-box{text-align:center;padding:1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius)}
+    .stat-box .stat-num{font-family:var(--font-h);font-size:2rem;font-weight:800;color:var(--accent);display:block}
+    .stat-box .stat-label{font-size:.78rem;color:var(--text2);margin-top:.2rem}
+  </style>
+</head>
+<body>
+
+<!-- Effects -->
+<canvas id="particles"></canvas>
+<div class="bg-grid"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="scan-line"></div>
+
+<!-- Navigation -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">I<b>.</b>Soumaré</a>
+    <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Accueil</a></li>
+      <li><a href="experiences.html">Stages</a></li>
+      <li><a href="realisations.html">Réalisations</a></li>
+      <li><a href="veille.html">Veille Techno</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="page">
+  <!-- ═══════ HERO ═══════ -->
+  <section class="hero" style="position:relative">
+    <div class="float-icons" id="floatingIcons"></div>
+    <div class="hero-inner fade-in" style="position:relative;z-index:1">
+      <div class="hero-badge"><span class="pulse"></span> Disponible pour un stage / alternance</div>
+      <h1>Bonjour, je suis<br><span class="accent glitch" data-text="Ibrahim Soumaré">Ibrahim Soumaré</span></h1>
+      <p>Étudiant en BTS SIO option SISR, passionné par les infrastructures réseau, la cybersécurité et l'administration système.</p>
+      <div class="hero-btns">
+        <a href="doc/CV-SOUMARE.pdf" target="_blank" class="btn btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          Voir mon CV
+        </a>
+        <a href="#contact" class="btn btn-outline">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Me contacter
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <!-- ═══════ TERMINAL ═══════ -->
+    <section class="section fade-in">
+      <div class="terminal" id="terminal">
+        <div class="terminal-bar">
+          <span class="terminal-dot r"></span>
+          <span class="terminal-dot y"></span>
+          <span class="terminal-dot g"></span>
+          <span>ibrahim@portfolio:~</span>
+        </div>
+        <div class="terminal-body" id="terminalBody"></div>
+      </div>
+    </section>
+
+    <!-- ═══════ PRÉSENTATION ═══════ -->
+    <section class="section fade-in">
+      <h2 class="section-title"><span class="dot"></span> À propos</h2>
+      <p class="section-sub">Mon parcours et mes compétences</p>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon icon-green">🎓</div>
+            <h3>Formation</h3>
+          </div>
+          <p>BTS Services Informatiques aux Organisations, option Solutions d'Infrastructure, Systèmes et Réseaux (SISR). Passionné par l'administration réseau, la sécurité et la supervision d'infrastructure.</p>
+          <div>
+            <span class="tag tag-green">Linux</span>
+            <span class="tag tag-blue">Réseau</span>
+            <span class="tag tag-purple">Cybersécurité</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon icon-blue">⚙️</div>
+            <h3>Compétences techniques</h3>
+          </div>
+          <p>Administration Linux/Windows, configuration réseau (DNS, DHCP, VLAN), supervision Nagios/SNMP, pare-feu (UFW, iptables), messagerie Postfix, gestion de parc GLPI, centralisation de logs.</p>
+          <div>
+            <span class="tag tag-green">GLPI</span>
+            <span class="tag tag-blue">Nagios</span>
+            <span class="tag tag-gold">Cisco</span>
+            <span class="tag tag-purple">SSH</span>
+          </div>
+        </div>
+      </div>
+
+
+
+      <!-- STATS COUNTERS -->
+      <div class="stats-row fade-in">
+        <div class="stat-box">
+          <span class="stat-num" data-target="5">0</span>
+          <span class="stat-label">Stages réalisés</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num" data-target="17">0</span>
+          <span class="stat-label">Projets AP</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num" data-target="2">0</span>
+          <span class="stat-label">Certifications</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num" data-target="2">0</span>
+          <span class="stat-label">Années BTS</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ CERTIFICATIONS ═══════ -->
+    <section class="section fade-in">
+      <h2 class="section-title"><span class="dot"></span> Certifications</h2>
+      <p class="section-sub">Mes certifications et formations complémentaires</p>
+
+      <div class="certif-item">
+        <div class="certif-icon icon-blue">🏅</div>
+        <div class="certif-info">
+          <h4>Cisco — Introduction to Networks</h4>
+          <p>Cisco Networking Academy — Fondamentaux de la cybersécurité</p>
+        </div>
+      </div>
+      <div class="certif-item">
+        <div class="certif-icon icon-gold">🏅</div>
+        <div class="certif-info">
+          <h4>PIX — Certification de compétences numériques</h4>
+          <p>Certification nationale des compétences numériques</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ CONTACT ═══════ -->
+    <section class="section fade-in" id="contact">
+      <h2 class="section-title"><span class="dot"></span> Contact</h2>
+      <p class="section-sub">N'hésitez pas à me contacter</p>
+
+      <div class="contact-grid">
+        <div class="contact-card">
+          <div class="c-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div>
+            <h4>Email</h4>
+            <a href="mailto:Ibrahim.soumare91@gmail.com">Ibrahim.soumare91@gmail.com</a>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="c-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          </div>
+          <div>
+            <h4>GitHub</h4>
+            <a href="https://github.com/soumare-ibrahim" target="_blank">soumare-ibrahim</a>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="c-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          </div>
+          <div>
+            <h4>LinkedIn</h4>
+            <a href="https://linkedin.com/in/ibrahim-soumare-5576b22a2" target="_blank">Ibrahim Soumaré</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 Ibrahim Soumaré — Tous droits réservés</p>
+</footer>
+
+<script src="script.js"></script>
+<script>
+// ══════════════════════════════════════════
+// TERMINAL TYPING EFFECT
+// ══════════════════════════════════════════
+(function(){
+  const lines = [
+    {type:'cmd', prompt:'ibrahim@portfolio:~$', text:' whoami'},
+    {type:'output', text:'Ibrahim Soumaré — Étudiant BTS SIO SISR'},
+    {type:'cmd', prompt:'ibrahim@portfolio:~$', text:' cat competences.txt'},
+    {type:'output', text:'Linux, Réseau, Nagios, GLPI, SSH, Pare-feu, DNS...'},
+    {type:'cmd', prompt:'ibrahim@portfolio:~$', text:' ls ./projets/'},
+    {type:'output', text:'TP_DNS/  TP_SSH/  GLPI_Postfix/  Nagios/  OMV/  UFW/  Rsyslog/'},
+    {type:'cmd', prompt:'ibrahim@portfolio:~$', text:' echo "Bienvenue sur mon portfolio !"'},
+    {type:'output', text:'Bienvenue sur mon portfolio !'},
+  ];
+
+  const body = document.getElementById('terminalBody');
+  if(!body) return;
+  let i=0;
+
+  function addLine(){
+    if(i >= lines.length){ addCursor(); return; }
+    const l = lines[i];
+    const div = document.createElement('div');
+    div.className = 'terminal-line';
+    div.style.animationDelay = (i * 0.15) + 's';
+
+    if(l.type === 'cmd'){
+      div.innerHTML = '<span class="prompt">' + l.prompt + '</span><span class="cmd">' + l.text + '</span>';
+    } else {
+      div.innerHTML = '<span class="output">' + l.text + '</span>';
+    }
+    body.appendChild(div);
+    i++;
+    setTimeout(addLine, 350);
+  }
+
+  function addCursor(){
+    const div = document.createElement('div');
+    div.className = 'terminal-line';
+    div.style.animationDelay = '0s';
+    div.innerHTML = '<span class="prompt">ibrahim@portfolio:~$</span> <span class="cursor-blink"></span>';
+    body.appendChild(div);
+  }
+
+  // Start when terminal is visible
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e => {
+      if(e.isIntersecting){ addLine(); obs.unobserve(e.target); }
+    });
+  }, {threshold:0.3});
+  const term = document.getElementById('terminal');
+  if(term) obs.observe(term);
+})();
+
+// ══════════════════════════════════════════
+// PARTICLE BACKGROUND
+// ══════════════════════════════════════════
+(function(){
+  const canvas = document.getElementById('particles');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w, h, particles = [];
+
+  function resize(){ w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  for(let i=0; i<60; i++){
+    particles.push({
+      x: Math.random()*w, y: Math.random()*h,
+      vx: (Math.random()-.5)*.3, vy: (Math.random()-.5)*.3,
+      r: Math.random()*1.5+.5
+    });
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    particles.forEach((p,i)=>{
+      p.x += p.vx; p.y += p.vy;
+      if(p.x<0) p.x=w; if(p.x>w) p.x=0;
+      if(p.y<0) p.y=h; if(p.y>h) p.y=0;
+
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(0,230,118,0.25)';
+      ctx.fill();
+
+      // Connect nearby particles
+      for(let j=i+1;j<particles.length;j++){
+        const dx=p.x-particles[j].x, dy=p.y-particles[j].y;
+        const dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<120){
+          ctx.beginPath();
+          ctx.moveTo(p.x,p.y);
+          ctx.lineTo(particles[j].x,particles[j].y);
+          ctx.strokeStyle='rgba(0,230,118,'+(0.08*(1-dist/120))+')';
+          ctx.lineWidth=.5;
+          ctx.stroke();
+        }
+      }
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ══════════════════════════════════════════
+// SKILL BARS ANIMATION
+// ══════════════════════════════════════════
+(function(){
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        e.target.querySelectorAll('.skill-fill').forEach(bar=>{
+          bar.style.width = bar.dataset.width + '%';
+        });
+        obs.unobserve(e.target);
+      }
+    });
+  },{threshold:0.3});
+  const sb = document.getElementById('skillBars');
+  if(sb) obs.observe(sb);
+})();
+
+// ══════════════════════════════════════════
+// COUNTER ANIMATION
+// ══════════════════════════════════════════
+(function(){
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        e.target.querySelectorAll('.stat-num').forEach(num=>{
+          const target = +num.dataset.target;
+          let current = 0;
+          const step = Math.ceil(target / 30);
+          const timer = setInterval(()=>{
+            current += step;
+            if(current >= target){ current = target; clearInterval(timer); }
+            num.textContent = current;
+          }, 60);
+        });
+        obs.unobserve(e.target);
+      }
+    });
+  },{threshold:0.5});
+  document.querySelectorAll('.stats-row').forEach(r=>obs.observe(r));
+})();
+
+// ══════════════════════════════════════════
+// FLOATING TECH ICONS
+// ══════════════════════════════════════════
+(function(){
+  const container = document.getElementById('floatingIcons');
+  if(!container) return;
+  const icons = ['⚡','🖥️','🔐','🌐','💾','📡','🛡️','⚙️','📊','🔧','💻','🗄️'];
+  icons.forEach((icon,i) => {
+    const el = document.createElement('span');
+    el.className = 'float-icon';
+    el.textContent = icon;
+    el.style.left = Math.random()*100 + '%';
+    el.style.animationDuration = (15 + Math.random()*20) + 's';
+    el.style.animationDelay = (Math.random()*10) + 's';
+    el.style.fontSize = (.8 + Math.random()*1.2) + 'rem';
+    container.appendChild(el);
+  });
+})();
+</script>
+</body>
+</html>

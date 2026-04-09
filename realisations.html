@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Réalisations — Ibrahim Soumaré</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="particles" style="position:fixed;inset:0;z-index:0;pointer-events:none"></canvas>
+<div class="bg-grid"></div>
+<div class="scan-line" style="position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.08;z-index:99;pointer-events:none;animation:scanDown 8s linear infinite"></div>
+<style>@keyframes scanDown{0%{top:0}100%{top:100vh}}</style>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">I<b>.</b>Soumaré</a>
+    <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <ul class="nav-links">
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="experiences.html">Stages</a></li>
+      <li><a href="realisations.html" class="active">Réalisations</a></li>
+      <li><a href="veille.html">Veille Techno</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="container">
+
+    <section class="section fade-in">
+      <h2 class="section-title"><span class="dot"></span> Mes Réalisations</h2>
+      <p class="section-sub">Comptes rendus d'Activités Professionnelles (AP)</p>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="annee1">🗂 1ère année (2 AP)</button>
+        <button class="tab-btn" data-tab="annee2">🗂 2ème année (5 AP)</button>
+      </div>
+
+      <!-- ═══════ 1ère ANNÉE ═══════ -->
+      <div class="tab-panel active" id="annee1">
+        <div class="grid-2">
+
+          <!-- TP DNS -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon icon-blue">🌐</div>
+              <h3>TP DNS</h3>
+            </div>
+            <p>Installation et configuration d'un serveur DNS et DHCP sous Linux. Mise en place de la résolution de noms, configuration des zones directes et inverses, et paramétrage du service DHCP pour l'attribution automatique d'adresses IP.</p>
+            <div>
+              <span class="tag tag-blue">DNS</span>
+              <span class="tag tag-green">DHCP</span>
+              <span class="tag tag-purple">Linux</span>
+            </div>
+            <a href="doc/TP - Serveurs DHCP et DNS sous Linux - Partie 2.pdf" target="_blank" class="card-link">
+              Voir le compte rendu <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+
+          <!-- TP SSH -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon icon-green">🔐</div>
+              <h3>TP SSH</h3>
+            </div>
+            <p>Configuration d'un accès distant sécurisé via le protocole SSH. Génération de paires de clés RSA, configuration du serveur OpenSSH, désactivation de l'authentification par mot de passe et mise en place de tunnels SSH.</p>
+            <div>
+              <span class="tag tag-green">SSH</span>
+              <span class="tag tag-purple">Sécurité</span>
+              <span class="tag tag-blue">OpenSSH</span>
+            </div>
+            <a href="doc/TP_SIO1_SSH.pdf" target="_blank" class="card-link">
+              Voir le compte rendu <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ═══════ 2ème ANNÉE ═══════ -->
+      <div class="tab-panel" id="annee2">
+        <div class="grid-2">
+
+          <!-- TP GLPI – Postfix -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon icon-gold">📋</div>
+              <h3>TP GLPI – Postfix</h3>
+            </div>
+            <p>Déploiement de GLPI pour la gestion de parc informatique et du helpdesk, couplé à un serveur de messagerie Postfix pour l'envoi automatique de notifications par e-mail lors de la création et du suivi des tickets d'incidents.</p>
+            <div>
+              <span class="tag tag-gold">GLPI</span>
+              <span class="tag tag-blue">Postfix</span>
+              <span class="tag tag-green">Helpdesk</span>
+            </div>
+            <a href="doc/AP4_GLPI_POSTFIX.pdf" target="_blank" class="card-link">
+              Voir le compte rendu <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+
+          <!-- TP RADIUS – RANCID -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon icon-red">🔐</div>
+              <h3>TP RADIUS – RANCID</h3>
+            </div>
+            <p>Mise en place d'un serveur RADIUS (FreeRADIUS) pour l'authentification 802.1X par adresse MAC sur switches HP et Cisco, avec affectation dynamique de VLAN. Sauvegarde automatisée des configurations réseau avec RANCID et Gitweb.</p>
+            <div>
+              <span class="tag tag-red">RADIUS</span>
+              <span class="tag tag-blue">802.1X</span>
+              <span class="tag tag-green">RANCID</span>
+            </div>
+            <a href="doc/Ap10_OUCHEIKH_SOUMARE.pdf" target="_blank" class="card-link">
+              Voir le compte rendu <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+
+          <!-- TP OMV – RANCID -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon icon-purple">💾</div>
+              <h3>TP OMV – RANCID</h3>
+            </div>
+            <p>Installation d'OpenMediaVault (OMV) pour le déploiement d'un serveur NAS et configuration de RANCID pour la sauvegarde automatique des configurations des équipements réseau (switchs, routeurs) avec suivi des modifications via versionnage.</p>
+            <div>
+              <span class="tag tag-purple">OMV</span>
+              <span class="tag tag-gold">RANCID</span>
+              <span class="tag tag-blue">NAS</span>
+            </div>
+            <a href="doc/AP5 OMV .pdf" target="_blank" class="card-link">
+              Voir le compte rendu <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+
+          <!-- TP Sudo – UFW -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon icon-green">🛡️</div>
+              <h3>TP Sudo – UFW</h3>
+            </div>
+            <p>Sécurisation d'un serveur Linux par la configuration fine des droits d'élévation de privilèges avec sudo (fichier sudoers) et mise en place du pare-feu UFW pour filtrer le trafic entrant et sortant selon des règles adaptées aux services.</p>
+            <div>
+              <span class="tag tag-green">Sudo</span>
+              <span class="tag tag-red">UFW</span>
+              <span class="tag tag-purple">Sécurité</span>
+            </div>
+            <a href="doc/AP15 SUDO.pdf" target="_blank" class="card-link">
+              Voir le compte rendu <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+
+          <!-- TP LogAnalyzer – Rsyslog -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon icon-blue">📝</div>
+              <h3>TP LogAnalyzer – Rsyslog</h3>
+            </div>
+            <p>Centralisation des journaux système avec Rsyslog pour collecter les logs de plusieurs machines sur un serveur dédié, et déploiement de LogAnalyzer comme interface web de consultation et d'analyse des événements en temps réel.</p>
+            <div>
+              <span class="tag tag-blue">Rsyslog</span>
+              <span class="tag tag-gold">LogAnalyzer</span>
+              <span class="tag tag-green">Logs</span>
+            </div>
+            <a href="doc/AP7 Loganalyzer.pdf" target="_blank" class="card-link">
+              Voir le compte rendu <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 Ibrahim Soumaré — Tous droits réservés</p>
+</footer>
+
+<script src="script.js"></script>
+<script src="particles.js"></script>
+<script>
+// Tab system
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

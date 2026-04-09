@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stages — Ibrahim Soumaré</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="particles" style="position:fixed;inset:0;z-index:0;pointer-events:none"></canvas>
+<div class="bg-grid"></div>
+<div class="scan-line" style="position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.08;z-index:99;pointer-events:none;animation:scanDown 8s linear infinite"></div>
+<style>@keyframes scanDown{0%{top:0}100%{top:100vh}}</style>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">I<b>.</b>Soumaré</a>
+    <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <ul class="nav-links">
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="experiences.html" class="active">Stages</a></li>
+      <li><a href="realisations.html">Réalisations</a></li>
+      <li><a href="veille.html">Veille Techno</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="container">
+
+    <section class="section fade-in">
+      <h2 class="section-title"><span class="dot"></span> Mes Stages</h2>
+      <p class="section-sub">Rapports de stage réalisés durant mon parcours BTS SIO</p>
+
+      <div class="grid-2">
+
+        <div class="card stage-card fade-in">
+          <img src="img/stage1.jpeg" alt="Stage DSI" class="stage-img">
+          <div class="stage-body">
+            <h3>Stage — Assistant DSI</h3>
+            <p>Maintenance réseau et support technique au lycée Charlemagne à Paris. Gestion de l'infrastructure réseau, assistance aux utilisateurs et maintenance du parc informatique.</p>
+            <div>
+              <span class="tag tag-green">Réseau</span>
+              <span class="tag tag-blue">Support</span>
+            </div>
+            <a href="doc/Rapport-Charlemagne.pdf" target="_blank" class="card-link">
+              Voir le rapport <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="card stage-card fade-in">
+          <img src="img/stage2.jpeg" alt="Stage informaticien" class="stage-img">
+          <div class="stage-body">
+            <h3>Stage — Assistant Informaticien</h3>
+            <p>Réparation, vente et conseil sur du matériel informatique. Diagnostic de pannes, assemblage et conseil clientèle sur les solutions matérielles.</p>
+            <div>
+              <span class="tag tag-gold">Matériel</span>
+              <span class="tag tag-purple">Diagnostic</span>
+            </div>
+            <a href="doc/Structure rapport de stage 2021 (Récupération automatique).pdf" target="_blank" class="card-link">
+              Voir le rapport <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="card stage-card fade-in">
+          <img src="img/stage3.jpeg" alt="Stage développeur" class="stage-img">
+          <div class="stage-body">
+            <h3>Stage — Assistant Développeur</h3>
+            <p>Découverte du développement web et gestion d'un projet applicatif. Participation à la conception et au développement de solutions web.</p>
+            <div>
+              <span class="tag tag-blue">Web</span>
+              <span class="tag tag-green">Développement</span>
+            </div>
+            <a href="doc/rapport de stage ibrahim.pdf" target="_blank" class="card-link">
+              Voir le rapport <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="card stage-card fade-in">
+          <img src="img/stage4.png" alt="Stage technicien" class="stage-img">
+          <div class="stage-body">
+            <h3>Stage — Technicien Informatique</h3>
+            <p>Maintenance des infrastructures réseau et systèmes au lycée Simone Signoret. Administration serveurs, gestion Active Directory et support utilisateurs.</p>
+            <div>
+              <span class="tag tag-green">Infrastructure</span>
+              <span class="tag tag-purple">Admin Sys</span>
+            </div>
+            <a href="doc/Rapport-Signoret.pdf" target="_blank" class="card-link">
+              Voir le rapport <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 Ibrahim Soumaré — Tous droits réservés</p>
+</footer>
+
+<script src="script.js"></script>
+<script src="particles.js"></script>
+</body>
+</html>

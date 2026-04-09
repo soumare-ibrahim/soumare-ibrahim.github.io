@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Veille Technologique — Ibrahim Soumaré</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .veille-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5rem;margin-bottom:3rem}
+    @media(max-width:720px){.veille-grid{grid-template-columns:1fr}}
+    .v-article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all .35s}
+    .v-article:hover{border-color:rgba(0,230,118,.25);transform:translateY(-5px);box-shadow:0 16px 50px rgba(0,0,0,.3)}
+    .v-article img{width:100%;height:210px;object-fit:cover}
+    .v-article .v-body{padding:1.4rem}
+    .v-article h3{font-family:var(--font-h);font-size:1.05rem;margin-bottom:.5rem;line-height:1.45}
+    .v-article .v-tag{display:inline-block;padding:.18rem .55rem;border-radius:5px;font-size:.7rem;font-weight:600;margin-bottom:.7rem}
+    .v-article p{font-size:.88rem;color:var(--text2);line-height:1.7}
+    .v-article .v-source{display:flex;align-items:center;gap:.5rem;margin-top:1rem;padding-top:.8rem;border-top:1px solid var(--border);font-size:.78rem;color:var(--text2)}
+    .v-article .v-source span{color:var(--accent);font-weight:600}
+
+    .methodo-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:2.5rem}
+    .methodo-box h3{font-family:var(--font-h);font-size:1.1rem;margin-bottom:.8rem;color:var(--accent);display:flex;align-items:center;gap:.5rem}
+    .methodo-list{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.6rem}
+    .methodo-list li{padding:.6rem .8rem;background:var(--bg2);border-radius:8px;font-size:.88rem;display:flex;align-items:center;gap:.5rem;color:var(--text2)}
+    .methodo-list li::before{content:'✓';color:var(--accent);font-weight:700}
+
+    .flux-rss-box{background:linear-gradient(135deg,var(--surface),var(--bg3));border:1px solid var(--border);border-radius:var(--radius);padding:2rem;margin-top:2rem}
+    .flux-rss-box h3{font-family:var(--font-h);font-size:1.15rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.6rem}
+    .flux-rss-box h3 svg{color:var(--accent)}
+    .flux-rss-box>p{color:var(--text2);font-size:.9rem;margin-bottom:1.2rem}
+    .rss-sources{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1.5rem}
+    .rss-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .8rem;background:var(--accent-d);border:1px solid rgba(0,230,118,.15);border-radius:99px;font-size:.78rem;font-weight:600;color:var(--accent)}
+    .rss-badge svg{width:14px;height:14px}
+    #rss-feed{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
+    .rss-item{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:all .3s;text-decoration:none;color:inherit;display:block}
+    .rss-item:hover{border-color:rgba(0,230,118,.2);transform:translateY(-3px)}
+    .rss-item img{width:100%;height:140px;object-fit:cover}
+    .rss-item .rss-body{padding:1rem}
+    .rss-item h4{font-size:.88rem;margin-bottom:.3rem;line-height:1.4;color:var(--text)}
+    .rss-item p{font-size:.78rem;color:var(--text2);line-height:1.5}
+    .rss-item .rss-more{display:inline-flex;align-items:center;gap:.3rem;color:var(--accent);font-size:.78rem;font-weight:600;margin-top:.5rem}
+    .rss-loading{text-align:center;padding:2rem;color:var(--text2)}
+    .rss-loading .spinner{display:inline-block;width:24px;height:24px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:.5rem}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .img-fallback{width:100%;height:210px;background:linear-gradient(135deg,var(--surface2),var(--bg3));display:flex;align-items:center;justify-content:center;font-size:2.5rem}
+  </style>
+</head>
+<body>
+
+<canvas id="particles" style="position:fixed;inset:0;z-index:0;pointer-events:none"></canvas>
+<div class="bg-grid"></div>
+<div class="scan-line" style="position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.08;z-index:99;pointer-events:none;animation:scanDown 8s linear infinite"></div>
+<style>@keyframes scanDown{0%{top:0}100%{top:100vh}}</style>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">I<b>.</b>Soumaré</a>
+    <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <ul class="nav-links">
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="experiences.html">Stages</a></li>
+      <li><a href="realisations.html">Réalisations</a></li>
+      <li><a href="veille.html" class="active">Veille Techno</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="container">
+
+    <!-- ═══════ INTRO ═══════ -->
+    <section class="section fade-in">
+      <h2 class="section-title"><span class="dot"></span> Veille Technologique</h2>
+      <p class="section-sub">L'Intelligence Artificielle au service du Football</p>
+
+      <div class="veille-intro">
+        <h2>⚽ Quand l'IA transforme le football</h2>
+        <p>
+          Le football moderne ne se joue plus seulement sur le terrain. L'intelligence artificielle, les capteurs biométriques, la modélisation 3D et le big data révolutionnent chaque aspect du sport — de l'arbitrage à la performance des joueurs, en passant par l'expérience des spectateurs.
+          <br><br>
+          Ma veille se concentre sur les innovations technologiques majeures : le partenariat <strong>Microsoft × La Liga</strong> avec la plateforme Beyond Stats, la technologie du <strong>hors-jeu semi-automatique (SAOT)</strong> de la FIFA avec modélisation 3D et avatars IA des joueurs pour la Coupe du Monde 2026, les <strong>capteurs GPS et IMU</strong> intégrés aux ballons et portés par les athlètes, les <strong>masques à oxygène</strong> utilisés par les joueurs du Real Madrid, ainsi que toutes les convergences entre informatique et football.
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══════ MÉTHODOLOGIE ═══════ -->
+    <section class="section fade-in">
+      <div class="methodo-box">
+        <h3>🔍 Ma méthodologie de veille</h3>
+        <ul class="methodo-list">
+          <li>Flux RSS agrégés (sport + technologie)</li>
+          <li>Alertes Google : "IA football", "SAOT FIFA"</li>
+          <li>Publications officielles FIFA / UEFA / La Liga</li>
+          <li>Sites spécialisés (Catapult, STATSports)</li>
+          <li>Conférences tech (CES, Lenovo Tech World)</li>
+          <li>Réseaux sociaux et blogs sport-tech</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ═══════ ARTICLES DE VEILLE ═══════ -->
+    <section class="section fade-in">
+      <h2 class="section-title" style="font-size:1.3rem"><span class="dot"></span> Articles & Résumés</h2>
+      <br>
+
+      <div class="veille-grid">
+
+        <!-- Article 1: Hors-jeu semi-automatique 3D -->
+        <article class="v-article fade-in">
+          <img src="img/saot-3d.jpg" 
+               alt="Hors-jeu semi-automatique SAOT - modélisation 3D des joueurs FIFA">
+          <div class="v-body">
+            <span class="v-tag tag-green">SAOT / Modélisation 3D</span>
+            <h3>Hors-jeu semi-automatique : la FIFA modélise chaque joueur en 3D avec des avatars IA</h3>
+            <p>Pour la Coupe du Monde 2026, la FIFA va scanner numériquement chacun des 1 248 joueurs afin de créer des avatars 3D personnalisés. Le système SAOT utilise 12 caméras qui traquent 29 points du corps de chaque joueur 50 fois par seconde. Combiné au capteur IMU intégré au ballon (500 données/seconde), le système reconstruit une animation 3D précise de la position des membres au moment exact de la passe, permettant des décisions de hors-jeu au millimètre.</p>
+            <div class="v-source"><span>FIFA / Lenovo Tech World — CES 2026</span></div>
+          </div>
+        </article>
+
+        <!-- Article 2: Capteur dans le ballon -->
+        <article class="v-article fade-in">
+          <img src="img/ballon-capteur.jpg" 
+               alt="Ballon connecté Al Rihla avec capteur IMU à l'intérieur">
+          <div class="v-body">
+            <span class="v-tag tag-blue">Connected Ball</span>
+            <h3>L'intérieur du ballon connecté : le capteur IMU au cœur d'Al Rihla</h3>
+            <p>Le ballon officiel de la FIFA embarque un capteur IMU (Inertial Measurement Unit) développé par KINEXON, positionné en son centre. Ce capteur transmet 500 données par seconde à la salle d'opérations vidéo, permettant de détecter avec précision le moment exact du contact avec le pied du joueur. Cette technologie du « ballon connecté » est couplée au système SAOT pour identifier les situations de hors-jeu avec une exactitude sans précédent.</p>
+            <div class="v-source"><span>FIFA / Adidas / KINEXON</span> — Connected Ball Technology</div>
+          </div>
+        </article>
+
+        <!-- Article 3: Microsoft x La Liga -->
+        <article class="v-article fade-in">
+          <img src="img/beyond-stats.jpg" 
+               alt="Microsoft La Liga Beyond Stats - Goal Probability IA">
+          <div class="v-body">
+            <span class="v-tag tag-purple">Partenariat IA</span>
+            <h3>Microsoft × La Liga : Beyond Stats et l'IA au service des fans</h3>
+            <p>Grâce au partenariat avec Microsoft Azure, La Liga capture 3,5 millions de données par match via 16 caméras de tracking optique. La plateforme Beyond Stats, propulsée par Copilot et le machine learning Azure, génère des analyses en temps réel : probabilité de but (xG), zones de chaleur, schémas tactiques et contenus personnalisés. Les coachs accèdent aux données en direct depuis des Surface Pro sur le bord du terrain.</p>
+            <div class="v-source"><span>Microsoft / La Liga</span> — Azure AI & Beyond Stats</div>
+          </div>
+        </article>
+
+        <!-- Article 4: Masques à oxygène Real Madrid -->
+        <article class="v-article fade-in">
+          <img src="img/masques-real.jpeg" 
+               alt="Joueurs du Real Madrid avec masques à oxygène à l'entraînement">
+          <div class="v-body">
+            <span class="v-tag tag-red">Récupération</span>
+            <h3>Masques à oxygène et caissons hyperbares : la technologie de récupération des élites</h3>
+            <p>Les joueurs du Real Madrid, du PSG et d'autres grands clubs utilisent des masques à oxygène sur le banc de touche pour accélérer la récupération musculaire entre les mi-temps. L'oxygénothérapie hyperbare (respiration d'O₂ pur sous pression) favorise la régénération des tissus et réduit les temps de guérison. Des joueurs comme Mbappé ou Vinicius Jr. utilisent aussi des « altitude training masks » qui simulent l'entraînement en altitude pour améliorer la VO₂max et l'endurance cardiovasculaire.</p>
+            <div class="v-source"><span>Sport Science</span> — Oxygénothérapie & récupération sportive</div>
+          </div>
+        </article>
+
+        <!-- Article 5: Capteurs GPS wearables -->
+        <article class="v-article fade-in">
+          <img src="img/capteur-gps.png" 
+               alt="Brassière avec capteur GPS tracker football">
+          <div class="v-body">
+            <span class="v-tag tag-gold">Wearables / GPS</span>
+            <h3>Capteurs GPS et brassières connectées : chaque sprint est mesuré</h3>
+            <p>Les footballeurs pros portent des brassières équipées de trackers GPS (Catapult, STATSports, Playertek) qui enregistrent en continu : position, vitesse, accélération, distance, fréquence cardiaque et charge musculaire. Ces données permettent aux préparateurs physiques d'optimiser l'entraînement, de prévenir les blessures et de décider des remplacements en temps réel. Le PSG, Manchester City et le FC Barcelone investissent massivement dans ces technologies.</p>
+            <div class="v-source"><span>Catapult Sports / STATSports</span> — Performance tracking</div>
+          </div>
+        </article>
+
+        <!-- Article 6: VAR et analyse tactique IA -->
+        <article class="v-article fade-in">
+          <img src="img/lenovo-fifa.jpg" 
+               alt="Lenovo FIFA World Cup 2026 Football AI Pro">
+          <div class="v-body">
+            <span class="v-tag tag-blue">Data Analytics</span>
+            <h3>Football AI Pro : la FIFA démocratise l'analyse tactique par IA</h3>
+            <p>Annoncé au CES 2026 en partenariat avec Lenovo, « Football AI Pro » analyse des centaines de millions de données pour générer des insights en texte, vidéo, graphiques et visualisations 3D. Tous les 48 sélections de la Coupe du Monde 2026 y auront accès. Des plateformes comme StatsBomb et Opta utilisent déjà le machine learning pour calculer les xG, identifier les schémas de pressing et prédire les compositions adverses.</p>
+            <div class="v-source"><span>FIFA / Lenovo / StatsBomb</span> — Football AI Pro</div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ═══════ FLUX RSS ═══════ -->
+    <section class="section fade-in">
+      <div class="flux-rss-box">
+        <h3>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+          Flux RSS — Football & Technologie
+        </h3>
+        <p>Articles récents agrégés automatiquement depuis des sources spécialisées en sport et technologie.</p>
+
+        <div class="rss-sources">
+          <span class="rss-badge">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+            Sport24 — Le Figaro
+          </span>
+          <span class="rss-badge">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+            Foot Mercato
+          </span>
+          <span class="rss-badge">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+            RMC Sport
+          </span>
+          <span class="rss-badge">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+            Objet Connecté
+          </span>
+        </div>
+
+        <div id="rss-feed">
+          <div class="rss-loading">
+            <div class="spinner"></div>
+            <p>Chargement des flux RSS...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 Ibrahim Soumaré — Tous droits réservés</p>
+</footer>
+
+<script src="script.js"></script>
+<script src="particles.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const container = document.getElementById('rss-feed');
+  
+  const feeds = [
+    'https://sport24.lefigaro.fr/rss/sport24.xml',
+    'https://www.footmercato.net/flux-rss',
+    'https://rmcsport.bfmtv.com/rss/football/',
+    'https://www.objetconnecte.com/feed/'
+  ];
+
+  let allItems = [];
+  let feedsLoaded = 0;
+
+  feeds.forEach(feedUrl => {
+    const proxy = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(feedUrl);
+    
+    fetch(proxy)
+      .then(r => r.json())
+      .then(data => {
+        if (data.items) {
+          allItems = allItems.concat(
+            data.items.slice(0, 3).map(item => ({...item, feedTitle: data.feed ? data.feed.title : ''}))
+          );
+        }
+      })
+      .catch(() => {})
+      .finally(() => {
+        feedsLoaded++;
+        if (feedsLoaded === feeds.length) renderRSS(allItems);
+      });
+  });
+
+  function renderRSS(items) {
+    if (items.length === 0) {
+      container.innerHTML = '<p style="color:var(--text2);text-align:center;padding:1.5rem;">Les flux RSS ne sont pas disponibles pour le moment. Rechargez la page ou consultez directement les sources ci-dessus.</p>';
+      return;
+    }
+
+    items.sort(() => Math.random() - 0.5);
+    items = items.slice(0, 8);
+
+    container.innerHTML = items.map(item => {
+      let img = '';
+      if (item.enclosure && item.enclosure.link) img = item.enclosure.link;
+      else if (item.thumbnail) img = item.thumbnail;
+      else {
+        const m = item.description && item.description.match(/<img[^>]+src="([^">]+)"/i);
+        if (m) img = m[1];
+      }
+
+      const desc = item.description ? item.description.replace(/<[^>]*>/g, '').slice(0, 100) + '...' : '';
+      const imgTag = img
+        ? '<img src="' + img + '" alt="' + (item.title||'').replace(/"/g,'') + '" loading="lazy" onerror="this.style.display=\'none\'">'
+        : '';
+
+      return '<a href="' + item.link + '" target="_blank" rel="noopener" class="rss-item">'
+        + imgTag
+        + '<div class="rss-body">'
+        + '<h4>' + item.title + '</h4>'
+        + '<p>' + desc + '</p>'
+        + '<span class="rss-more">Lire l\'article →</span>'
+        + '</div></a>';
+    }).join('');
+  }
+});
+</script>
+</body>
+</html>
